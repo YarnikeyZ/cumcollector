@@ -1,18 +1,8 @@
 from tkinter import *
 from tkinter import ttk
-from configparser import ConfigParser
 from os.path import abspath as wd
-
-config = ConfigParser()
-config.read(f'{wd("")}/config.ini')
-
-style = dict(config["style"])
-style.update({
-    'text-size-big': int(style["text-size-big"]),
-    'text-size-mid': int(style["text-size-mid"]),
-    'text-size-small': int(style["text-size-small"]),
-    'button-size-main': int(style["button-size-main"]),
-})
+import platform
+import configparser
 
 tocalc = None
 equal = None
@@ -66,7 +56,24 @@ def addButton(text, row, column, rowspan, columnspan, colortype):
 
 
 def main():
-    global tocalc, equal, str_tocalc, str_equal
+    global tocalc, equal, str_tocalc, str_equal, config, style
+
+    # Config reading
+    pathSymbol = '/' if platform.system() == "Linux" else '\\'
+    fullPath = __file__
+    lastPathSymbol = fullPath.rfind(pathSymbol)
+
+    config = configparser.ConfigParser()
+    config.read(f'{fullPath[:lastPathSymbol-len(fullPath)+1]}config.ini')
+
+    style = dict(config["style"])
+    style.update({
+        'text-size-big': int(style["text-size-big"]),
+        'text-size-mid': int(style["text-size-mid"]),
+        'text-size-small': int(style["text-size-small"]),
+        'button-size-main': int(style["button-size-main"]),
+    })
+
     window = Tk()
     window.title("Cumcollector")
     window.geometry("320x375")
